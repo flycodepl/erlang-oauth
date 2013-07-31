@@ -3,6 +3,7 @@
 -export(
   [ get/5
   , get/6
+  , get/7
   , header/1
   , post/5
   , post/6
@@ -29,10 +30,14 @@ start() ->
 get(URL, ExtraParams, Consumer, Token, TokenSecret) ->
   get(URL, ExtraParams, Consumer, Token, TokenSecret, []).
 
--spec get(string(), [proplists:property()], oauth_client:consumer(), string(), string(), [proplists:property()]) -> ibrowse:response().
+-spec get(string(), [proplists:property()], oauth_client:consumer(), string(), string(), [proplists:property()], pos_integer() | infinity) -> ibrowse:response().
 get(URL, ExtraParams, Consumer, Token, TokenSecret, HttpcOptions) ->
+    get(URL, ExtraParams, Consumer, Token, TokenSecret, HttpcOptions, 30000).
+
+-spec get(string(), [proplists:property()], oauth_client:consumer(), string(), string(), [proplists:property()]) -> ibrowse:response().
+get(URL, ExtraParams, Consumer, Token, TokenSecret, HttpcOptions, Timeout) ->
   SignedParams = signed_params("GET", URL, ExtraParams, Consumer, Token, TokenSecret),
-  oauth_http:get(uri(URL, SignedParams), HttpcOptions).
+  oauth_http:get(uri(URL, SignedParams), HttpcOptions, Timeout).
 
 -spec post(string(), [proplists:property()], oauth_client:consumer(), string(), string()) -> ibrowse:response().
 post(URL, ExtraParams, Consumer, Token, TokenSecret) ->

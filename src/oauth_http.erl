@@ -1,6 +1,6 @@
 -module(oauth_http).
 
--export([get/1, get/2, post/2, post/3, delete/1, delete/2]).
+-export([get/1, get/2, get/3, post/2, post/3, delete/1, delete/2]).
 
 -type http_status() :: {string(), integer(), string()}.
 
@@ -10,7 +10,11 @@ get(URL) ->
 
 -spec get(string(), [proplists:property()]) -> ibrowse:response().
 get(URL, Options) ->
-  ibrowse:send_req(URL, [], get, [], [{ssl_options, [{ssl_imp, old}]}|Options]).
+    get(URL, Options, 30000).
+
+-spec get(string(), [proplists:property()], pos_integer() | infinity) -> ibrowse:response().
+get(URL, Options, Timeout) ->
+  ibrowse:send_req(URL, [], get, [], [{ssl_options, [{ssl_imp, old}]}|Options], Timeout).
 
 -spec post(string(), term()) -> ibrowse:response().
 post(URL, Data) ->
